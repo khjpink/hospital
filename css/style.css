@@ -1,0 +1,1109 @@
+
+        /* 기본 스타일 및 색상 변수 설정 (이미지 기반) */
+        :root {
+            --primary-light: #00d2d2; /* 밝은 시안/민트 (메인/액티브) */
+            --primary-dark: #00a0a0; /* 사이드바 배경 */
+            --secondary-color: #333333; /* 기본 텍스트 색상 */
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --graph-line: #42a5f5; /* 밝은 파란색 (그래프 선) */
+            
+            --alert-critical: #ff7675; /* 빨간색 */
+            --alert-warning: #fdcb6e; /* 노란색 */
+            --alert-normal: #00b894; /* 녹색 */
+            --alert-info: #42a5f5; /* 파란색 */
+
+            --kpi-green: #48c187; /* KPI 녹색 블록 */
+            --kpi-blue: #00d2d2; /* KPI 파란색 블록 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 전체 레이아웃 */
+#container {
+  display: flex;
+  height: calc(100vh - 60px); /* 헤더 제외 후 동일한 높이 */
+  overflow: hidden;
+}
+
+/* 사이드바 */
+#sidebar {
+  width: 260px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* 메인 콘텐츠 */
+#main-content {
+  flex: 1;
+  height: 100%;
+  overflow: hidden; /* 스크롤 없음 */
+}
+
+/* app-container도 동일 높이 */
+#app-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+        /* style.css 파일 하단에 추가 */
+
+/* --- 사이드바 서브 메뉴 스타일 --- */
+.sub-menu {
+    max-height: 0; /* 초기 높이는 0 (숨김) */
+    overflow: hidden; /* 오버플로우 숨김 */
+    transition: max-height 0.3s ease-in-out; /* 부드러운 애니메이션 */
+    background-color: var(--primary-dark); /* 상위 메뉴와 동일 */
+}
+
+/* 서브 메뉴 내부 링크 스타일 */
+.sub-menu a {
+    padding: 8px 20px 8px 45px !important; /* 들여쓰기 효과 */
+    font-size: 0.9rem;
+    font-weight: 400 !important;
+    opacity: 0.8;
+}
+
+/* 서브 메뉴가 열렸을 때 (JavaScript에서 적용) */
+.menu-toggle-item.open + .sub-menu {
+    max-height: 300px; /* 충분히 큰 값으로 설정하여 내용을 모두 표시 (애니메이션 목적) */
+}
+
+/* 토글 아이콘 회전 */
+.menu-toggle-item .toggle-icon {
+    transition: transform 0.3s ease-in-out;
+}
+.menu-toggle-item.open .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* 활성화된 메뉴 항목 스타일 유지 */
+.sidebar-menu a.active {
+    background-color: var(--primary-light);
+    font-weight: 600;
+}
+.sidebar-menu a.active + .sub-menu a:first-child {
+    /* 활성화된 부모 메뉴가 서브 메뉴를 가릴 수 있으므로 추가 보정 (선택 사항) */
+}
+
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--secondary-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* --- 1. 상단 헤더 (Top Bar) 스타일 --- */
+        #top-header {
+            background-color: var(--primary-dark); 
+            color: white;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            height: 60px; /* 고정 높이 */
+        }
+
+        #top-header .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        #top-header .logo i { margin-right: 10px; font-size: 1.5rem; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+/* style.css 파일의 80행 근처에 추가 */
+
+/* --- 검색창 스타일 --- */
+/* style.css 파일의 80행 근처, .header-search 스타일 수정 */
+
+/* style.css 파일의 80행 근처, .header-search 스타일 수정 */
+
+.header-search {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 5px 15px;
+    
+    /* 기존 마진 설정 제거 및 간격 확보 */
+    margin-left: auto; /* 로고와 검색창 사이의 모든 공간을 차지하여 검색창을 오른쪽으로 밀어냅니다. */
+    margin-right: 20px; /* .header-right와의 간격을 20px로 설정 (한 뼘 간격 시뮬레이션) */
+    
+    /* 기존: flex-grow: 1; */
+    /* flex-grow 제거 */
+    max-width: 400px;
+}
+.header-search input {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.9rem;
+    padding: 2px 5px;
+    outline: none;
+    flex-grow: 1;
+}
+
+/* 입력창 플레이스홀더 색상 변경 */
+.header-search input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.header-search .fa-search {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+
+        .header-status {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        /* 햄버거 버튼 (기본 숨김) */
+        #menu-toggle-button {
+            display: none; 
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* --- 1-1. 상단 핵심 요약 (KPI Bar) - 이미지와 동일한 모듈 디자인 --- */
+        #kpi-summary-bar {
+            background-color: var(--card-bg);
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .kpi-module {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            flex-grow: 1;
+            min-width: 150px;
+            height: 80px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* KPI 특정 색상 */
+        .kpi-module.type-patients { background-color: var(--kpi-green); }
+        .kpi-module.type-capacity { background-color: var(--kpi-blue); }
+        .kpi-module.type-alert { background-color: var(--alert-critical); } /* 빨간색 경고 */
+
+        .kpi-module .kpi-main-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-right: 15px;
+        }
+        .kpi-module .kpi-label-group {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .kpi-module.kpi-large { flex-grow: 1.5; }
+        
+        /* 중앙 상세 KPI */
+        #kpi-detail-center {
+            display: flex;
+            gap: 20px;
+            flex-grow: 3;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding-left: 20px;
+        }
+        .kpi-detail-item {
+            text-align: center;
+        }
+        .kpi-detail-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+        }
+        .kpi-detail-alert-value { color: var(--alert-critical); }
+
+        /* --- 2. 메인 컨테이너 (사이드바 + 콘텐츠) --- */
+        #app-container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        /* --- 3. 사이드바 스타일 --- */
+        #sidebar {
+            width: 250px; 
+            background-color: var(--primary-dark);
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-menu-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-menu {
+            flex-grow: 1; /* 메뉴가 공간을 차지하도록 */
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            justify-content: space-between; /* 아이콘과 텍스트 양쪽 정렬 */
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+        .sidebar-menu a .menu-item-content { /* 텍스트와 왼쪽 아이콘 묶음 */
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-menu a .menu-item-content i { margin-right: 10px; }
+
+        .sidebar-menu a:hover, .sidebar-menu .active {
+            opacity: 1;
+            background-color: var(--primary-light);
+            font-weight: 600;
+            border-left: 4px solid var(--alert-warning); 
+            padding-left: 16px;
+        }
+        .sidebar-menu .active { background-color: var(--primary-light); }
+
+        /* 사이드바 하단 메뉴 */
+        .sidebar-footer-menu {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 10px;
+            padding-bottom: 10px; /* 하단 패딩 추가 */
+        }
+/* style.css 파일의 220행 근처, .sidebar-footer-menu a 정의 수정 */
+
+.sidebar-footer-menu a {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white; /* 호버 시 색상 변경을 위해 기본 색상을 명확히 정의 */
+    text-decoration: none;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    transition: opacity 0.2s, background-color 0.2s, color 0.2s; /* color transition 추가 */
+}
+.sidebar-footer-menu a:hover {
+    opacity: 1; 
+    /* 기존: background-color: rgba(255, 255, 255, 0.1); */
+    /* 변경: 상위 메뉴 활성화 색상인 --primary-light로 변경 */
+    background-color: var(--primary-light); 
+    
+    /* 글자색을 대비되도록 어두운 색으로 변경 (선택적) */
+    /* 현재 배경색이 밝아지므로, 글자색을 --secondary-color (어두운 색)로 바꾸면 가독성이 좋아집니다. */
+    color: var(--secondary-color); 
+}
+.sidebar-footer-menu a i { margin-right: 10px; }
+
+
+        /* --- 4. 메인 콘텐츠 영역 --- */
+        #main-content {
+            flex-grow: 1;
+            padding: 20px 30px 30px 30px;
+            overflow-y: hidden;
+        }
+        
+        #main-content h2 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        /* --- 5. 대시보드 카드 레이아웃 (새로운 3열 구조) --- */
+ .dashboard-card {
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); 
+    min-height: 200px;
+    
+    /* !!! 기본 테두리 추가 (투명) !!! */
+    border: 3px solid transparent; 
+
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, border-color 0.3s ease-in-out; 
+}
+        /* 모든 대시보드 카드 호버 효과 */
+.dashboard-card:hover {
+    /* 더 눈에 띄는 그림자 효과 적용 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); 
+    /* 카드가 살짝 위로 뜨는 듯한 효과 */
+    transform: translateY(-3px); 
+    cursor: pointer;
+    
+    /* !!! 여기에 테두리 색상 추가하여 하이라이트 가시화 !!! */
+    border-color: var(--primary-light); 
+}
+        
+        /* 새로운 레이아웃 위치 지정 */
+        #bpm-card { grid-column: 1 / 2; }
+        #rp-card { grid-column: 2 / 3; }
+            /* style.css 파일의 #fall-card, #absence-card 부분 유지 */
+        #fall-card { 
+            grid-column: 1 / 2; /* 기존처럼 2열에 남겨두면, RP 카드 아래에 쌓입니다. */
+        }        
+        #absence-card { 
+            grid-column: 2 / 3; /* 기존처럼 2열에 남겨두면, RP 카드 아래에 쌓입니다. */
+        }
+
+        /* style.css 파일의 #dashboard-container 부분 수정 */
+        #dashboard-container {
+            display: grid;
+            /* 1열: BPM (1fr), 2열: RP/위험/부재 (1fr), 3열: 알림 (1fr) */
+            /* BPM과 RP를 동등하게 보려면 1열: 1.2fr, 2열: 1.2fr로 설정하는 것도 좋습니다. */
+            grid-template-columns: 1.2fr 1.2fr 1fr; 
+            gap: 20px;
+            grid-auto-rows: minmax(min-content, auto);
+            position: relative;
+        }
+        
+        /* 알림 패널: 3열 전체 높이 차지 */
+        #alert-panel { 
+            grid-column: 3 / 4; 
+            grid-row: 1 / span 99; /* 1행부터 시작하여 99개 행을 차지 (전체 높이 확보) */
+            position: sticky; 
+            top: 80px; 
+            align-self: start; 
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .subtitle {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        /* 심박수/호흡수 카드 상단 데이터 새로고침 및 범례 */
+        .card-meta-info {
+            display: flex;
+            justify-content: flex-end; /* 오른쪽 정렬 */
+            align-items: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+.card-meta-info .refresh-data {
+    margin-right: auto; 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #999;
+    cursor: pointer;
+    
+    /* !!! 여기에 transition 속성 추가 !!! */
+    transition: all 0.2s ease-in-out; 
+    
+    /* 패딩을 추가하여 배경색이 눈에 띄게 함 */
+    padding: 4px 8px; 
+    border-radius: 4px;
+    
+    /* 기본 배경을 투명하게 설정 */
+    background-color: transparent; 
+}
+
+/* 마우스 오버(Hover) 시 스타일 */
+.card-meta-info .refresh-data:hover {
+    color: var(--secondary-color); /* 텍스트 색상을 좀 더 진하게 */
+    background-color: #e0e0e0; /* 연한 회색 배경색으로 하이라이트 */
+}
+
+        /* style.css 파일 하단에 추가 */
+
+/* style.css 파일 하단에 추가 (애니메이션 및 오버레이 스타일) */
+
+/* 로딩 아이콘 회전 애니메이션 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 새로고침 애니메이션 오버레이 */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* !!! 높이를 100%로 명확히 설정 !!! */
+    background-color: rgba(255, 255, 255, 0.7); /* 흰색 반투명 배경 */
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none; /* !!! 필수: 기본 상태에서는 클릭 이벤트를 통과시킴 !!! */
+    transition: opacity 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px; 
+}
+
+/* 로딩 중 상태 */
+.dashboard-container.is-loading .loading-overlay {
+    opacity: 1;
+    pointer-events: auto; /* !!! 로딩 중에는 클릭 이벤트를 막음 !!! */
+}
+
+/* 새로고침 아이콘 회전 (자바스크립트 대신 CSS 애니메이션 사용) */
+.loading-overlay .fa-sync-alt {
+    animation: spin 1s linear infinite;
+}
+
+
+/* 로딩 중 아이콘 회전 */
+.refresh-data.is-loading i {
+    animation: spin 1s linear infinite;
+}
+        .card-meta-info .legend-item {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+        }
+        .card-meta-info .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .legend-color.normal { background-color: var(--alert-normal); }
+        .legend-color.warning { background-color: var(--alert-warning); }
+        .legend-color.critical { background-color: var(--alert-critical); }
+
+
+        /* --- 6. 바이탈 그래프 스타일 (Mock Chart) --- */
+        
+        /* 그래프와 레전드를 병렬로 표시하는 Flex 컨테이너 */
+      .content-flex-split {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start; 
+    /* flex-direction: row;  <-- 이 줄은 삭제하거나, 아래처럼 column으로 변경 */
+    flex-direction: column; /* 세로 스택으로 변경 */
+}
+
+        /* 환자 목록 영역 (좌측 배치) */
+.chart-legend-list {
+    /* flex-grow: 1;  <-- 이 줄은 삭제하거나 수정하지 않아도 됩니다. */
+    list-style: none;
+    padding-top: 0px; 
+    /* width: 35%;  <-- PC 뷰에서는 100%를 사용하도록 이 줄을 삭제하거나 100%로 변경 */
+    width: 100%;
+    /* flex-shrink: 0; <-- 삭제해도 무방 */
+    margin-right: 0; /* 우측 마진 제거 */
+    order: 2 !important; /* HTML에 설정된 order: 1보다 우선하여 아래로 이동 (2번) */
+}
+        
+        /* 차트 영역 (우측 배치) */
+ .chart-area {
+    /* flex-basis: 65%; <-- PC 뷰에서는 100%를 사용하도록 이 줄을 삭제하거나 100%로 변경 */
+    width: 100%;
+    /* flex-shrink: 0; <-- 삭제해도 무방 */
+    padding-top: 10px;
+    order: 1 !important; /* HTML에 설정된 order: 2보다 우선하여 위로 이동 (1번) */
+}
+        
+        .vital-chart {
+            position: relative;
+            height: 150px; 
+            border-bottom: 1px solid #eee; /* X축 선 */
+            padding-bottom: 20px;
+            padding-left: 30px; /* Y축 레이블 공간 */
+            overflow: hidden; /* 차트 밖으로 나가는 요소 숨김 */
+        }
+
+        /* 꺾은선 그래프 스타일 (Image 2 참고) - SVG나 Canvas 대신 Div로 시뮬레이션 */
+        .mock-line-chart {
+            position: absolute;
+            bottom: 0; 
+            left: 30px; 
+            width: calc(100% - 30px); 
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            z-index: 1;
+        }
+ 
+        /* 꺾은선 그래프 모양 (Placehold URL 대신 단순 색상 오버레이 유지) */
+/* style.css 파일의 397행 근처 수정 */
+/* 꺾은선 그래프 모양 (Placehold URL 대신 단순 색상 오버레이 유지) */
+.mock-chart-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0; /* 면적이 X축(아래)에서부터 채워지도록 기준을 설정 */
+    left: 0;
+    
+    /* 연한 하늘색 계열의 배경색으로 채우기 */
+    background: rgba(0, 210, 210, 0.1); 
+    opacity: 1; 
+    z-index: 1;
+    
+    /* --- 선이 연결된 모양을 시뮬레이션하기 위해 clip-path 사용 --- */
+    /* 현재 데이터 포인트 (10%, 30%, 50%, 70%, 90%)와 높이 (bottom 기준)에 맞게 조정 */
+    /* BPM 카드: 30%, 50%, 40%, 65%, 90% */
+    /* Y축 상하 반전 감안하여 100%에서 뺀 값으로 설정 (예: 90% 높이는 10% 위치) */
+    clip-path: polygon(
+        30px 100%, /* 왼쪽 Y축 시작 (X=30px, Y=100%) */
+        10% 70%, /* 10% 위치 (100% - 30% 높이) */
+        30% 50%, /* 30% 위치 (100% - 50% 높이) */
+        50% 60%, /* 50% 위치 (100% - 40% 높이) */
+        70% 35%, /* 70% 위치 (100% - 65% 높이) */
+        90% 10%, /* 90% 위치 (100% - 90% 높이) */
+        calc(100% - 20px) 100% /* 오른쪽 X축 끝 (Y=100%) */
+    );
+    transition: clip-path 0.5s ease; /* 애니메이션 효과 추가 (선택 사항) */
+}
+
+/* style.css 파일의 412행 근처 수정 */
+
+/* 데이터 포인트 시뮬레이션 */
+.data-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--graph-line);
+    border: 2px solid var(--card-bg);
+    z-index: 5;
+    transform: translate(-50%, 50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+/* data-point에 가상 요소를 사용하여 연결 선 시뮬레이션 */
+.data-point::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; 
+    /* 이전 포인트와의 연결을 시뮬레이션하기 위해 변환 사용 */
+    /* 이 방법은 정적인 위치에만 유효하며, 동적인 그래프에는 적합하지 않습니다. */
+    /* 복잡한 계산이 필요하므로, 여기서는 시각적 효과만 부여합니다. */
+}
+
+/* 꺾은선 그래프의 선(테두리) 시뮬레이션 */
+.mock-chart-line-border {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-left: 2px solid var(--graph-line); /* Y축과 겹치도록 왼쪽 선 추가 */
+    border-bottom: 2px solid var(--graph-line); /* X축과 겹치도록 아래 선 추가 */
+    z-index: 2;
+    pointer-events: none; /* 클릭 이벤트 방지 */
+    
+    /* 면적과 동일한 클립 패스 적용 */
+    clip-path: polygon(
+        30px 100%, 
+        10% 70%, 
+        30% 50%, 
+        50% 60%, 
+        70% 35%, 
+        90% 10%, 
+        calc(100% - 20px) 100%
+    );
+    
+    /* 테두리만 보이도록 배경색은 투명하게 */
+    background: transparent;
+    /* 테두리 스타일링 */
+    box-shadow: 0 0 0 2px var(--graph-line); /* 선을 굵게 표시하는 가짜 테두리 */
+}
+
+
+        .data-label {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        /* Y축 레이블 */
+        .chart-y-axis-label {
+            position: absolute;
+            left: 0px; 
+            font-size: 0.7rem; 
+            color: #999; 
+            padding: 2px 0;
+            width: 30px;
+            text-align: right;
+            z-index: 2;
+        }
+        .chart-y-axis-label:nth-child(2) { top: 0; } /* 140 */
+        .chart-y-axis-label:nth-child(3) { top: 25%; } /* 100 */
+        .chart-y-axis-label:nth-child(4) { top: 50%; } /* 60 */
+        .chart-y-axis-label:nth-child(5) { top: 75%; } /* 20 */
+
+        .chart-x-axis-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: -15px;
+            padding-left: 30px; 
+            padding-right: 20px;
+        }
+
+        /* --- 이미지의 레전드 스타일 (환자 목록) --- */
+        
+        /* 환자 목록 리스트 아이템 스타일 */
+        .chart-legend-list li {
+            font-size: 0.9rem;
+            padding: 4px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dotted #eee;
+            margin: 0; /* 간격 제거 */
+        }
+        .chart-legend-list li:last-child { border-bottom: none; }
+
+        /* 환자 이름, 나이, 성별을 포함하는 컨테이너 */
+.patient-info-name {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    /* overflow: hidden; */
+}
+        /* 나이/성별 정보를 이름 옆에 한 줄로 표시 */
+/* 나이/성별 정보를 이름 옆에 한 줄로 표시 (기존 스타일) */
+.patient-info-name .age,
+/* !!! 여기에 새로운 클래스를 추가합니다. !!! */
+.patient-name-with-age .age {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #6b7280;
+    margin-left: 5px; 
+    white-space: nowrap;
+}
+        
+        /* 하트와 수치 컨테이너 */
+        .vital-data-container {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 5px; /* 수치와 하트 간격 */
+        }
+
+        .vital-value {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--secondary-color);
+        }
+
+        /* 하트 아이콘 스타일 */
+        .heart-icon {
+            font-size: 1.1rem;
+        }
+        .heart-icon.critical { color: var(--alert-critical); }
+        .heart-icon.warning { color: var(--alert-warning); }
+        .heart-icon.normal { color: var(--alert-normal); }
+
+        
+        /* --- 7. 긴급 알림 스타일 (우측 고정 패널) --- */
+        
+        .alert-card-header {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--alert-critical);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-card-header .alert-filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .alert-card-header .alert-filter-buttons button {
+            background: none;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+        .alert-card-header .alert-filter-buttons button.active {
+            background-color: #f0f0f0;
+            border-color: #f0f0f0;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        .alert-card-header .alert-filter-buttons .alert-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .alert-card-header .alert-filter-buttons .alert-dot.warning { background-color: var(--alert-warning); }
+        .alert-card-header .alert-filter-buttons .alert-dot.critical { background-color: var(--alert-critical); }
+
+.alert-item-row.critical-bg {
+    background-color: rgba(255, 118, 117, 0.1); /* --alert-critical 색상에 투명도 10% 적용 */
+}
+
+        #alert-feed {
+            flex-grow: 1; 
+            overflow-y: auto;
+            padding-top: 10px;
+        }
+        .alert-item-row {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px dotted #eee;
+        }
+        .alert-item-row:last-child { border-bottom: none; }
+        
+        .alert-icon-box {
+            font-size: 1rem;
+            width: 28px; 
+            height: 28px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .alert-icon-box.critical { background: var(--alert-critical); color: white; }
+        .alert-icon-box.warning { background: var(--alert-warning); color: var(--secondary-color); }
+        .alert-icon-box.info { background: var(--alert-info); color: white; }
+        
+        .alert-content {
+            flex-grow: 1;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .alert-content .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .alert-content .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .alert-type { font-weight: 700; margin-right: 5px; }
+        .alert-time { font-size: 0.75rem; color: #999; }
+        .alert-patient-info { font-weight: 500; color: #6b7280; }
+        .alert-room-info { font-size: 0.75rem; color: #999; }
+        
+        /* 알림 패널 하단 탭 메뉴 (Image 4 참고) */
+        .alert-bottom-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 15px;
+            flex-shrink: 0;
+        }
+        .alert-bottom-tabs button {
+            background: none;
+            border: none;
+            padding: 8px 5px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+        .alert-bottom-tabs button i {
+            font-size: 1.2rem;
+        }
+        .alert-bottom-tabs button.active,
+        .alert-bottom-tabs button:hover {
+            color: var(--primary-light);
+        }
+
+        
+        /* --- 8. 막대 그래프 스타일 (낙상/부재) --- */
+        #fall-card, #absence-card {
+            display: flex;
+            flex-direction: column;
+        }
+        .bar-chart-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mock-bar-chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 150px;
+            border-left: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 0 10px 5px 30px; /* Y축 레이블 공간 확보 */
+            position: relative; 
+            margin-bottom: 25px; /* X축 레이블 공간 확보 */
+        }
+/* style.css 파일의 530행 근처 수정 */
+.chart-bar-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column; /* 막대와 레이블을 세로로 정렬 */
+    align-items: center;
+    justify-content: flex-end; /* 막대와 레이블을 바닥(X축)으로 정렬 */
+    position: relative;
+    /* height: 100%; 이 줄이 없으면 막대 height % 계산이 안될 수 있음 */
+    height: 100%; /* 막대 높이 계산을 위해 컨테이너의 높이를 상속받도록 명시 */
+}
+/* style.css 파일의 540행 근처 수정 */
+.chart-bar {
+    width: 40%;
+    /* height는 HTML 인라인 스타일로 주어져야 함 (예: height: 90%;) */
+    transition: height 0.5s;
+    border-radius: 3px 3px 0 0;
+    /* 배경색은 HTML 인라인에 있으므로 여기서는 제거 */
+    /* background-color: var(--primary-light); */
+    
+    /* 막대가 flex-end로 정렬되도록 명확히 함 */
+    align-self: flex-end;
+}
+        .chart-bar-value {
+            position: absolute;
+            top: -15px; 
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #555;
+        }
+        .chart-bar-label {
+            position: absolute;
+            bottom: -20px;
+            font-size: 0.7rem;
+            color: #6b7280;
+            width: 100%;
+            text-align: center;
+        }
+        
+
+
+        /* Y축 레이블 위치 디버깅 */
+        .bar-chart-y-axis-label:nth-child(1) { top: 0; } /* 100% (위험) */
+        .bar-chart-y-axis-label:nth-child(2) { top: 33%; }
+        .bar-chart-y-axis-label:nth-child(3) { top: 66%; }
+        .bar-chart-y-axis-label:nth-child(4) { top: auto; bottom: 0; border-top: none; } /* 0% (정상) */
+
+        /* 낙상/부재 목록 스타일 */
+        .status-list {
+            list-style: none;
+            padding-top: 5px;
+        }
+        .status-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px dotted #eee;
+        }
+        .status-list li:last-child { border-bottom: none; }
+
+
+.status-list .patient-name-with-age {
+    /* 기존 스타일 유지: font-weight: 500; display: flex; align-items: center; */
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* 이름이 공간을 차지하도록 flex-grow 추가 */
+}
+        .status-list .status-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-list .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-list .status-text {
+            font-weight: 600;
+        }
+        .status-list .status-time {
+            font-size: 0.85rem;
+            color: var(--alert-critical);
+            font-weight: 600;
+        }
+
+        /* ================================================= */
+        /* --- 반응형 웹 (Responsive Web) 스타일 --- */
+        /* ================================================= */
+        @media (min-width: 1201px) {
+            /* PC 뷰: 3열 고정 레이아웃 유지 */
+        }
+
+        @media (max-width: 1200px) {
+             /* 중간 화면 (태블릿 뷰): 2열 배치 */
+/* style.css 파일의 310행 근처, #dashboard-container 정의 수정 */
+
+#dashboard-container {
+    display: grid;
+    /* ... 기타 속성 유지 ... */
+    grid-template-columns: 1.2fr 1.2fr 1fr; 
+    gap: 20px;
+    grid-auto-rows: minmax(min-content, auto);
+    
+    /* !!! 여기에 position: relative 추가 !!! */
+    position: relative; 
+}
+            
+            /* 모든 콘텐츠를 2열 중 한 곳에 쌓도록 재배치 */
+            #bpm-card, #rp-card, #fall-card, #absence-card, #alert-panel { 
+                grid-column: span 1 !important; 
+                grid-row: auto !important;
+            }
+            
+            /* 알림 패널은 이제 독립적인 카드가 됨 */
+            #alert-panel { 
+                position: static; 
+                min-height: auto;
+                grid-column: span 2; /* 2열 전체 사용 */
+            }
+            
+            /* 바이탈은 1열, 위험 감지는 2열에 배치 (1열에 몰리지 않도록) */
+            #bpm-card { grid-column: 1 / 2; }
+            #rp-card { grid-column: 1 / 2; }
+            #fall-card { grid-column: 2 / 3; }
+            #absence-card { grid-column: 2 / 3; }
+            
+            #kpi-summary-bar { padding: 10px 15px; }
+            #kpi-detail-center { display: none; } 
+            
+            /* 그래프/레전드 레이아웃 변경: 세로 스택 */
+            .content-flex-split { flex-direction: column; }
+            .chart-area { flex-basis: auto; width: 100%; }
+            .chart-legend-list { width: 100%; margin-right: 0; }
+        }
+
+        @media (max-width: 800px) {
+            /* 1. 레이아웃 변경 (모바일) */
+            #app-container { flex-direction: column; }
+            #main-content { padding: 15px; }
+
+            /* 2. 대시보드 그리드 1열 배치 */
+            #dashboard-container {
+                grid-template-columns: 1fr; 
+                gap: 15px;
+            }
+            
+            
+            /* 모든 카드는 1열 전체를 차지함 */
+            #bpm-card, #rp-card, #fall-card, #absence-card, #alert-panel { 
+                grid-column: span 1 !important; 
+                grid-row: auto !important;
+            }
+            
+            /* 3. KPI 바 래핑 */
+            #kpi-summary-bar { flex-wrap: wrap; justify-content: flex-start; }
+            .kpi-module { width: 48%; margin-bottom: 10px; }
+            .kpi-module.kpi-large { width: 100%; }
+            #kpi-detail-center { display: none; }
+            
+            /* 4. 사이드바 숨김/표시 */
+            #sidebar {
+                position: fixed; 
+                top: 60px; /* 헤더 높이만큼 */
+                left: 0;
+                width: 80%; 
+                height: calc(100% - 60px); 
+                transform: translateX(-100%); 
+                z-index: 90;
+                padding: 20px 15px;
+            }
+            #sidebar.open { transform: translateX(0); }
+            
+            /* 5. 햄버거 버튼 표시 */
+            #menu-toggle-button { display: block; }
+            .header-status { display: none; }
+        }
+
+        

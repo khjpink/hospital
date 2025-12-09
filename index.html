@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICU 환자 상태 통합 관제 대시보드</title>
+    <!-- 폰트 로딩: Inter (영문/숫자) 및 Noto Sans KR (한글) --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 아이콘 사용을 위해 Font Awesome 추가 --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css" />
+    
+</head>
+<body>
+    
+    <!-- 상단 헤더 -->
+<div id="top-header">
+    <span class="logo"><i class="fas fa-hospital-symbol"></i> The More Care System</span>
+    
+    <div class="header-search">
+        <input type="text" placeholder="통합 검색" id="dashboard-search-input">
+        <i class="fas fa-search"></i>
+    </div>
+    
+    <div class="header-right">
+        <div class="header-status">
+            <span><i class="fas fa-map-marker-alt"></i> 서울시 강북구</span>
+            <span id="current-time">2025. 11. 28. 10:30</span>
+        </div>
+        <button id="menu-toggle-button" aria-label="메뉴 열기/닫기">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</div>
+    
+    <!-- 상단 핵심 요약 (KPI Bar) -->
+    <div id="kpi-summary-bar">
+        <!-- 등록 환자 -->
+        <div class="kpi-module type-patients kpi-large">
+            <span class="kpi-main-value">1,152</span>
+            <div class="kpi-label-group">
+                <span>등록 환자</span>
+                <span>ICU 포함</span>
+            </div>
+        </div>
+        <!-- 전체 가동률 -->
+        <div class="kpi-module type-capacity kpi-large">
+            <span class="kpi-main-value">3,451</span>
+            <div class="kpi-label-group">
+                <span>전체 가동</span>
+                <span>병상 기준</span>
+            </div>
+        </div>
+        
+        <!-- 중앙 상세 KPI - 이미지와 최대한 유사하게 텍스트 배치 -->
+        <div id="kpi-detail-center">
+            <div class="kpi-detail-item">
+                <span class="kpi-detail-value">13,680</span>
+                <span>전체</span>
+            </div>
+            <div class="kpi-detail-item">
+                <span class="kpi-detail-value">10,470</span>
+                <span>정상</span>
+            </div>
+            <div class="kpi-detail-item">
+                <span class="kpi-detail-value kpi-detail-alert-value">2</span>
+                <span><i class="fas fa-exclamation-triangle"></i> 위험</span>
+            </div>
+            <div class="kpi-detail-item">
+                <span class="kpi-detail-value">3,208</span>
+                <span>미처리 대기</span>
+            </div>
+        </div>
+        
+        <!-- 날씨 정보 (이미지 참고) -->
+        <div class="kpi-module type-capacity" style="background-color: #42a5f5; width: 150px; font-size: 0.9rem;">
+            <i class="fas fa-cloud-sun" style="font-size: 1.8rem;"></i>
+            <div class="kpi-label-group" style="margin-left: 10px;">
+                <span>서울시 강북구</span>
+                <span>20℃ / 14℃ <i class="fas fa-water"></i> 20%</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 메인 컨테이너 -->
+    <div id="app-container">
+        
+        <!-- 좌측 사이드 메뉴 -->
+        <aside id="sidebar">
+            <div class="sidebar-menu-title">통합 대시보드</div>
+            
+            <nav class="sidebar-menu">
+                
+                <a href="#" class="active menu-toggle-item"><span class="menu-item-content"><i class="fas fa-chart-line"></i> 통합 대시보드</span> <i class="fas fa-chevron-down toggle-icon"></i></a>
+                <nav class="sub-menu">
+                    <a href="#">sub menu</a>
+                    <a href="#">sub menu</a>
+                </nav>
+
+                <a href="#" class="menu-toggle-item" ><span class="menu-item-content"><i class="fas fa-user-injured"></i> 환자 상세 정보</span> <i class="fas fa-chevron-down"></i></a>
+                <nav class="sub-menu">
+                    <a href="#">sub menu</a>
+                    <a href="#">sub menu</a>
+                </nav>                
+
+                <a href="#" class="menu-toggle-item" ><span class="menu-item-content"><i class="fas fa-procedures"></i> 병동 / 침상 관리</span> <i class="fas fa-chevron-down"></i></a>
+                <nav class="sub-menu">
+                    <a href="#">sub menu</a>
+                    <a href="#">sub menu</a>
+                </nav>                
+
+                <a href="#" class="menu-toggle-item" ><span class="menu-item-content"><i class="fas fa-exclamation-triangle"></i> 긴급 알림 설정</span> <i class="fas fa-chevron-down"></i></a>
+                <nav class="sub-menu">
+                    <a href="#">sub menu</a>
+                    <a href="#">sub menu</a>
+                </nav>                
+            </nav>
+
+
+            
+            <!-- 사이드바 하단 아이콘 메뉴 -->
+            <div class="sidebar-footer-menu">
+                <a href="#"><i class="fas fa-cog"></i> 설정</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+            </div>
+        </aside>
+        
+        <!-- 메인 콘텐츠 -->
+        <main id="main-content">
+            <!-- 3열 그리드 레이아웃 시작: 1열(바이탈), 2열(위험), 3열(알림) -->
+            <div id="dashboard-container">
+                
+ <div class="loading-overlay">
+        <i class="fas fa-sync-alt fa-spin" style="font-size: 2rem; color: var(--primary-dark);"></i>
+    </div>
+                    <div class="card-meta-info">
+                        <span class="refresh-data"><i class="fas fa-sync-alt"></i> 데이터 새로고침</span>
+                        <span class="legend-item"><span class="legend-color normal"></span> 정상</span>
+                        <span class="legend-item"><span class="legend-color warning"></span> 주의</span>
+                        <span class="legend-item"><span class="legend-color critical"></span> 경고</span>
+                    </div>
+                    
+                <!-- 1. 심박수 (BPM) 추이 그래프 - 1열에 위치 -->
+                <section id="bpm-card" class="dashboard-card">
+                    
+
+                    <div class="card-header">
+                        <span>심박수(BPM) <i class="fas fa-arrow-up-right-from-square"></i></span>
+                        <span class="subtitle">홍길동 외 4명 추이</span>
+                    </div>
+                    
+                    <!-- 그래프 + 환자 목록 병렬 레이아웃 -->
+                    <div class="content-flex-split">
+                        
+                        <!-- 좌측: 환자 목록 영역 (그래프 왼쪽) -->
+                        <ul class="chart-legend-list">
+                            <li>
+                                <span class="patient-info-name">
+                                    홍길동 <span class="age">(만74세/남)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-critical);">120</span>
+                                    <span class="heart-icon critical"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    남궁길순 <span class="age">(만60세/여)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-warning);">86</span>
+                                    <span class="heart-icon warning"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    박영 <span class="age">(만82세/남)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-normal);">76</span>
+                                    <span class="heart-icon normal"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    김철수 <span class="age">(만78세/남)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-normal);">65</span>
+                                    <span class="heart-icon normal"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    이영희 <span class="age">(만80세/여)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-normal);">62</span>
+                                    <span class="heart-icon normal"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <!-- 우측: 차트 영역 (꺾은선 그래프 시뮬레이션) -->
+                        <div class="chart-area" >
+                            <div class="vital-chart">
+                                <!-- Y축 레이블 시뮬레이션 -->
+                                <span class="chart-y-axis-label" style="top: 0;">140</span>
+                                <span class="chart-y-axis-label" style="top: 25%;">100</span>
+                                <span class="chart-y-axis-label" style="top: 50%;">60</span>
+                                <span class="chart-y-axis-label" style="top: 75%;">20</span>
+                                <span class="chart-y-axis-label" style="color: #999; top: 0; left: 0;">BPM</span> 
+                                
+                                <div class="mock-line-chart">
+                                    <!-- 꺾은선 그래프 시뮬레이션 (배경 이미지로 대체) -->
+                                    <div class="mock-chart-overlay"></div>
+                                    <div class="mock-chart-line-border"></div> <div class="data-point" style="left: 10%; bottom: 30%;">
+                                        <div class="data-label">25</div>
+                                    </div>
+                                    <!-- 데이터 포인트 시뮬레이션 -->
+                                    <div class="data-point" style="left: 10%; bottom: 30%;">
+                                        <div class="data-label">25</div>
+                                    </div>
+                                    <div class="data-point" style="left: 30%; bottom: 50%;">
+                                        <div class="data-label">40</div>
+                                    </div>
+                                    <div class="data-point" style="left: 50%; bottom: 40%;">
+                                        <div class="data-label">35</div>
+                                    </div>
+                                    <div class="data-point" style="left: 70%; bottom: 65%;">
+                                        <div class="data-label">50</div>
+                                    </div>
+                                    <div class="data-point" style="left: 90%; bottom: 90%;">
+                                        <div class="data-label">120</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- X축 시간 레이블 시뮬레이션 -->
+                            <div class="chart-x-axis-labels">
+                                <span>12.05</span>
+                                <span>12.1</span>
+                                <span>12.15</span>
+                                <span>12.20</span>
+                                <span>12.25</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 2. 호흡수 (RP) 추이 그래프 - 1열에 위치 (심박수 아래) -->
+                <section id="rp-card" class="dashboard-card">
+                    <div class="card-header">
+                        <span>호흡수(RP) <i class="fas fa-arrow-up-right-from-square"></i></span>
+                        <span class="subtitle">박영희 외 4명 추이</span>
+                    </div>
+                    
+                    <!-- 그래프 + 환자 목록 병렬 레이아웃 -->
+                    <div class="content-flex-split">
+                        
+                        <!-- 좌측: 환자 목록 영역 (그래프 왼쪽) -->
+                        <ul class="chart-legend-list">
+                            <li>
+                                <span class="patient-info-name">
+                                    홍길동 <span class="age">(만74세/남)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-critical);">33</span>
+                                    <span class="heart-icon critical"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    남궁길순 <span class="age">(만60세/여)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-warning);">28</span>
+                                    <span class="heart-icon warning"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    박영 <span class="age">(만82세/남)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-normal);">23</span>
+                                    <span class="heart-icon normal"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    김철수 <span class="age">(만78세/남)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-normal);">18</span>
+                                    <span class="heart-icon normal"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-info-name">
+                                    이영희 <span class="age">(만80세/여)</span>
+                                </span>
+                                <div class="vital-data-container">
+                                    <span class="vital-value" style="color: var(--alert-normal);">16</span>
+                                    <span class="heart-icon normal"><i class="fas fa-heart"></i></span>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <!-- 우측: 차트 영역 (꺾은선 그래프 시뮬레이션) -->
+                        <div class="chart-area" >
+                            <div class="vital-chart">
+                                <!-- Y축 레이블 시뮬레이션 (호흡수 기준) -->
+                                <span class="chart-y-axis-label" style="top: 0;">35</span>
+                                <span class="chart-y-axis-label" style="top: 25%;">30</span>
+                                <span class="chart-y-axis-label" style="top: 50%;">25</span>
+                                <span class="chart-y-axis-label" style="top: 75%;">20</span>
+                                <span class="chart-y-axis-label" style="color: #999; top: 0; left: 0;">RP</span>
+                                
+                                <div class="mock-line-chart">
+                                    <!-- 꺾은선 그래프 시뮬레이션 (배경 이미지로 대체) -->
+                                    <div class="mock-chart-overlay"></div>
+                                    
+                                    <div class="mock-chart-line-border"></div>
+                                    <div class="data-point" style="left: 10%; bottom: 60%;">
+                                    <div class="data-label">28</div>
+                                </div>
+
+                                    <!-- 데이터 포인트 시뮬레이션 -->
+                                    <div class="data-point" style="left: 10%; bottom: 60%;">
+                                        <div class="data-label">28</div>
+                                    </div>
+                                    <div class="data-point" style="left: 30%; bottom: 85%;">
+                                        <div class="data-label">32</div>
+                                    </div>
+                                    <div class="data-point" style="left: 50%; bottom: 40%;">
+                                        <div class="data-label">26</div>
+                                    </div>
+                                    <div class="data-point" style="left: 70%; bottom: 50%;">
+                                        <div class="data-label">27</div>
+                                    </div>
+                                    <div class="data-point" style="left: 90%; bottom: 70%;">
+                                        <div class="data-label">30</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- X축 시간 레이블 시뮬레이션 -->
+                            <div class="chart-x-axis-labels">
+                                <span>12:05</span>
+                                <span>12:10</span>
+                                <span>12:15</span>
+                                <span>12:20</span>
+                                <span>12:25</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. 낙상 위험도 현황 (바 그래프) - 2열에 위치 -->
+                <section id="fall-card" class="dashboard-card">
+                    <div class="card-header">
+                        <span>낙상 <i class="fas fa-arrow-up-right-from-square"></i></span>
+                        <span class="subtitle">홍길동 외 4명 위험도</span>
+                    </div>
+                    <div class="bar-chart-content">
+                        <div class="mock-bar-chart-container">
+                             <!-- Y축 레이블 시뮬레이션 -->
+                            <span class="bar-chart-y-axis-label" style="top: 0;">위험</span>
+                            <span class="bar-chart-y-axis-label" style="top: 33%;"></span>
+                            <span class="bar-chart-y-axis-label" style="top: 66%;"></span>
+                            <span class="bar-chart-y-axis-label" style="bottom: 0;">정상</span>
+
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 90%; background-color: var(--alert-critical);"></div>
+                                <span class="chart-bar-value">90%</span>
+                                <span class="chart-bar-label">홍길동</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 60%; background-color: var(--alert-warning);"></div>
+                                <span class="chart-bar-value">60%</span>
+                                <span class="chart-bar-label">김철수</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 30%; background-color: var(--alert-normal);"></div>
+                                <span class="chart-bar-value">30%</span>
+                                <span class="chart-bar-label">박영희</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 30%; background-color: var(--alert-normal);"></div>
+                                <span class="chart-bar-value">30%</span>
+                                <span class="chart-bar-label">이영민</span>
+                            </div>
+                        </div>
+                        <ul class="status-list">
+                            <li>
+                                <span class="patient-name-with-age">홍길동 <span class="age">(만74세)</span></span>
+                                <div class="status-info">
+                                    <span class="status-dot critical"></span>
+                                    <span class="status-text" style="color: var(--alert-critical);">위험🚨</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-name-with-age">김철수 <span class="age">(만78세)</span></span>
+                                <div class="status-info">
+                                    <span class="status-dot warning"></span>
+                                    <span class="status-text" style="color: var(--alert-warning);">주의⚠️</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-name-with-age">박영희 <span class="age">(만82세)</span></span>
+                                <div class="status-info">
+                                    <span class="status-dot normal"></span>
+                                    <span class="status-text" style="color: var(--alert-normal);">정상☑</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 4. 부재(이탈) 시간 현황 (바 그래프) - 2열에 위치 (낙상 아래) -->
+                <section id="absence-card" class="dashboard-card">
+                    <div class="card-header">
+                        <span>부재(Hour) <i class="fas fa-arrow-up-right-from-square"></i></span>
+                        <span class="subtitle">병동 이탈 감지</span>
+                    </div>
+                     <div class="bar-chart-content">
+                        <div class="mock-bar-chart-container">
+                             <!-- Y축 레이블 시뮬레이션 -->
+                            <span class="bar-chart-y-axis-label" style="top: 0;">이탈</span>
+                            <span class="bar-chart-y-axis-label" style="top: 33%;"></span>
+                            <span class="bar-chart-y-axis-label" style="top: 66%;"></span>
+                            <span class="bar-chart-y-axis-label" style="bottom: 0;">병동</span>
+                            
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 90%; background-color: var(--alert-critical);"></div>
+                                <span class="chart-bar-value">3:23h</span>
+                                <span class="chart-bar-label">홍길동</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 20%; background-color: var(--alert-normal);"></div>
+                                <span class="chart-bar-value">0:10h</span>
+                                <span class="chart-bar-label">김철수</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 60%; background-color: var(--alert-warning);"></div>
+                                <span class="chart-bar-value">1:03h</span>
+                                <span class="chart-bar-label">박영희</span>
+                            </div>
+                            <div class="chart-bar-wrapper">
+                                <div class="chart-bar" style="height: 20%; background-color: var(--alert-normal);"></div>
+                                <span class="chart-bar-value">0:17h</span>
+                                <span class="chart-bar-label">이영민</span>
+                            </div>
+                        </div>
+                        <ul class="status-list">
+                            <li>
+                                <span class="patient-name-with-age">홍길동 <span class="age">(만74세)</span></span>
+                                <div class="status-info">
+                                    <span class="status-dot critical"></span>
+                                    <span class="status-time">03:23</span>
+                                    <span class="status-text" style="color: var(--alert-critical);">부재⏰</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="patient-name-with-age">박영희 <span class="age">(만82세)</span></span>
+                                <div class="status-info">
+                                    <span class="status-dot warning"></span>
+                                    <span class="status-time" style="color: var(--alert-warning);">01:03</span>
+                                    <span class="status-text" style="color: var(--alert-warning);">주의⌛</span>
+                                </div>
+                            </li>
+                             <li>
+                                <span class="patient-name-with-age">김철수 <span class="age">(만78세)</span></span>
+                                <div class="status-info">
+                                    <span class="status-dot normal"></span>
+                                    <span class="status-time" style="color: var(--alert-normal);">00:33</span>
+                                    <span class="status-text" style="color: var(--alert-normal);">정상⏱</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- 5. 실시간 알림 메시지 (3열 전체 높이 차지) -->
+<section id="alert-panel" class="dashboard-card" style="position: sticky;">
+    
+    <div class="alert-card-header">
+        <span>실시간 알림 메시지 <i class="fas fa-arrow-up-right-from-square"></i></span>
+        <div class="alert-filter-buttons">
+            <button><span class="alert-dot warning"></span> 주의 보기</button>
+            <button class="active"><span class="alert-dot critical"></span> 경고 보기</button>
+        </div>
+    </div>
+    
+    <div id="alert-feed">
+        
+        <div class="alert-item-row critical-bg" data-type="heart">
+            <span class="alert-icon-box critical"><i class="fas fa-heart-crack"></i></span>
+            <div class="alert-content">
+                <div class="top-row">
+                    <span class="alert-type" style="color: var(--alert-critical);">심박수 경고</span>
+                    <span class="alert-time">2025.12.24 12:54:03</span>
+                </div>
+                <div class="bottom-row">
+                    <span class="alert-patient-info">홍길동 (301호)</span>
+                    <span class="alert-room-info">BPM 120 (위험)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert-item-row critical-bg" data-type="absence">
+            <span class="alert-icon-box critical"><i class="fas fa-street-view"></i></span>
+            <div class="alert-content">
+                <div class="top-row">
+                    <span class="alert-type" style="color: var(--alert-critical);">부재 위험 경고</span>
+                    <span class="alert-time">2025.12.24 12:54:03</span>
+                </div>
+                <div class="bottom-row">
+                    <span class="alert-patient-info">홍길동 (301호)</span>
+                    <span class="alert-room-info">1시간 이상 부재</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert-item-row" data-type="fall">
+            <span class="alert-icon-box warning"><i class="fas fa-user-slash"></i></span>
+            <div class="alert-content">
+                <div class="top-row">
+                    <span class="alert-type" style="color: var(--alert-warning);">낙상 주의</span>
+                    <span class="alert-time">2025.12.24 12:54:03</span>
+                </div>
+                <div class="bottom-row">
+                    <span class="alert-patient-info">박영희 (303호)</span>
+                    <span class="alert-room-info">위험도 60% (주의)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert-item-row" data-type="lung">
+            <span class="alert-icon-box warning"><i class="fas fa-lungs"></i></span>
+            <div class="alert-content">
+                <div class="top-row">
+                    <span class="alert-type" style="color: var(--alert-warning);">호흡수 주의</span>
+                    <span class="alert-time">2025.12.24 12:54:03</span>
+                </div>
+                <div class="bottom-row">
+                    <span class="alert-patient-info">박영희 (303호)</span>
+                    <span class="alert-room-info">RP 30 초과 (주의)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert-item-row critical-bg" data-type="heart">
+            <span class="alert-icon-box critical"><i class="fas fa-heart-crack"></i></span>
+            <div class="alert-content">
+                <div class="top-row">
+                    <span class="alert-type" style="color: var(--alert-critical);">심박수 경고</span>
+                    <span class="alert-time">2025.12.24 12:54:03</span>
+                </div>
+                <div class="bottom-row">
+                    <span class="alert-patient-info">홍길동 (301호)</span>
+                    <span class="alert-room-info">BPM 120 (위험)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert-item-row" data-type="info">
+            <span class="alert-icon-box info"><i class="fas fa-comment"></i></span>
+            <div class="alert-content">
+                <div class="top-row">
+                    <span class="alert-type" style="color: var(--alert-info);">간호사 호출</span>
+                    <span class="alert-time">2025.12.24 12:54:03</span>
+                </div>
+                <div class="bottom-row">
+                    <span class="alert-patient-info">이영민 (304호)</span>
+                    <span class="alert-room-info">오후 12:35</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert-bottom-tabs">
+        <button class="active" data-filter="all"><i class="fas fa-globe"></i> 전체</button>
+        <button data-filter="heart"><i class="fas fa-heartbeat"></i> 심박</button>
+        <button data-filter="lung"><i class="fas fa-lungs"></i> 호흡</button>
+        <button data-filter="fall"><i class="fas fa-user-slash"></i> 낙상</button>
+        <button data-filter="absence"><i class="fas fa-street-view"></i> 부재</button>
+    </div>
+
+</section>
+            </div>
+        </main>
+        
+    </div>
+
+    <footer>
+        <p style="text-align: center; color: #9ca3af; margin-top: 30px; font-size: 0.85rem; padding: 10px;">Hana HIS DEMO 페이지 - 중환자 관제 포트폴리오</p>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>
